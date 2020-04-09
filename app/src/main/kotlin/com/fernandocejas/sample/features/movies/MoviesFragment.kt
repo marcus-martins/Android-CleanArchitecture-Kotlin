@@ -16,11 +16,12 @@
 package com.fernandocejas.sample.features.movies
 
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.View
+import androidx.annotation.StringRes
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.fernandocejas.sample.core.platform.BaseFragment
 import com.fernandocejas.sample.R
+import com.fernandocejas.sample.core.di.viewmodel.ViewModelFactory
 import com.fernandocejas.sample.features.movies.MovieFailure.ListNotAvailable
 import com.fernandocejas.sample.core.exception.Failure
 import com.fernandocejas.sample.core.exception.Failure.NetworkConnection
@@ -48,7 +49,7 @@ class MoviesFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
 
-        moviesViewModel = viewModel(viewModelFactory) {
+        moviesViewModel = viewModel(viewModelFactory as ViewModelFactory) {
             observe(movies, ::renderMoviesList)
             failure(failure, ::handleFailure)
         }

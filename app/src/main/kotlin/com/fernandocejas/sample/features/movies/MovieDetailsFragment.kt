@@ -19,6 +19,7 @@ import android.os.Bundle
 import android.view.View
 import com.fernandocejas.sample.core.platform.BaseFragment
 import com.fernandocejas.sample.R
+import com.fernandocejas.sample.core.di.viewmodel.ViewModelFactory
 import com.fernandocejas.sample.features.movies.MovieFailure.NonExistentMovie
 import com.fernandocejas.sample.core.exception.Failure
 import com.fernandocejas.sample.core.exception.Failure.NetworkConnection
@@ -67,7 +68,7 @@ class MovieDetailsFragment : BaseFragment() {
         appComponent.inject(this)
         activity?.let { movieDetailsAnimator.postponeEnterTransition(it) }
 
-        movieDetailsViewModel = viewModel(viewModelFactory) {
+        movieDetailsViewModel = viewModel(viewModelFactory as ViewModelFactory) {
             observe(movieDetails, ::renderMovieDetails)
             failure(failure, ::handleFailure)
         }

@@ -23,11 +23,17 @@ import com.fernandocejas.sample.core.functional.Either.Right
 import com.fernandocejas.sample.core.interactor.UseCase
 import com.fernandocejas.sample.core.interactor.UseCase.None
 import com.fernandocejas.sample.core.navigation.Navigator
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
+import javax.inject.Named
 
 class PlayMovie
 @Inject constructor(private val context: Context,
-                    private val navigator: Navigator) : UseCase<None, Params>() {
+                    private val navigator: Navigator,
+                    @Named("UseCaseScope") scope: CoroutineScope,
+                    @Named("UseCaseDispatcher")dispatcher: CoroutineDispatcher
+) : UseCase<None, Params>(scope, dispatcher) {
 
     override suspend fun run(params: Params): Either<Failure, None> {
         navigator.openVideo(context, params.url)
