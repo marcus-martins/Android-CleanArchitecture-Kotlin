@@ -20,16 +20,27 @@ import com.fernandocejas.sample.core.functional.Either
 import kotlinx.coroutines.*
 
 abstract class UseCase<out Type, in Params>(
-        private val scope: CoroutineScope,
         private val dispatcher: CoroutineDispatcher
 ) where Type : Any {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     abstract suspend fun run(params: Params): Either<Failure, Type>
+    abstract val callableList: List<() -> Either<Failure, Type>>?
 
     operator fun invoke(params: Params, onResult: (Either<Failure, Type>) -> Unit = {}) {
         scope.launch {
-            withContext(dispatcher) {
-                run(params)
-            }.apply(onResult)
+            withContext(dispatcher) { run(params) }.apply(onResult)
+        }
+    }
+
+    operator fun invoke(onResult: (List<Either<Failure, Type>>) -> Unit = {}) {
+        scope.launch {
+            callableList?.let {
+                it.map {
+                    scope.async(dispatcher) { it.invoke() }
+                }.apply {
+                    onResult(awaitAll())
+                }
+            }
         }
     }
 

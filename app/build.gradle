@@ -99,6 +99,7 @@ dependencies {
   testImplementation unitTestDependencies.junit
   testImplementation unitTestDependencies.mockito
   testImplementation unitTestDependencies.kluent
+  testImplementation unitTestDependencies.coroutinesTest
 
   //Acceptance tests dependencies
   androidTestImplementation acceptanceTestDependencies.testRunner
@@ -106,6 +107,7 @@ dependencies {
   androidTestImplementation acceptanceTestDependencies.espressoCore
   androidTestImplementation acceptanceTestDependencies.espressoIntents
   androidTestImplementation acceptanceTestDependencies.androidAnnotations
+  androidTestImplementation acceptanceTestDependencies.coroutinesTest
 
   //Development dependencies
   debugImplementation developmentDependencies.leakCanary

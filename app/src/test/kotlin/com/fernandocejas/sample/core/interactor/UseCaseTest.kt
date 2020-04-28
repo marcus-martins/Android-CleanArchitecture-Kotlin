@@ -19,8 +19,9 @@ import com.fernandocejas.sample.AndroidTest
 import com.fernandocejas.sample.core.exception.Failure
 import com.fernandocejas.sample.core.functional.Either
 import com.fernandocejas.sample.core.functional.Either.Right
-import kotlinx.coroutines.experimental.runBlocking
-import org.amshove.kluent.shouldEqual
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
 
 class UseCaseTest : AndroidTest() {
@@ -30,28 +31,31 @@ class UseCaseTest : AndroidTest() {
 
     private val useCase = MyUseCase()
 
-    @Test fun `running use case should return 'Either' of use case type`() {
-        val params = MyParams(TYPE_PARAM)
-        val result = runBlocking { useCase.run(params) }
+    @Test fun `running use case should return 'Either' of use case type`() =
+            coroutinesTestRule.testDispatcher.runBlockingTest {
+                val params = MyParams(TYPE_PARAM)
+                val result = useCase.run(params)
 
-        result shouldEqual Right(MyType(TYPE_TEST))
-    }
+                result shouldBeEqualTo Right(MyType(TYPE_TEST))
+            }
 
-    @Test fun `should return correct data when executing use case`() {
-        var result: Either<Failure, MyType>? = null
+    @Test fun `should return correct data when executing use case`() =
+            coroutinesTestRule.testDispatcher.runBlockingTest {
+                var result: Either<Failure, MyType>? = null
 
-        val params = MyParams("TestParam")
-        val onResult = { myResult: Either<Failure, MyType> -> result = myResult }
+                val params = MyParams("TestParam")
+                val onResult = { myResult: Either<Failure, MyType> -> result = myResult }
 
-        runBlocking { useCase(params, onResult) }
+                useCase(params, onResult)
 
-        result shouldEqual Right(MyType(TYPE_TEST))
-    }
+                result shouldBeEqualTo Right(MyType(TYPE_TEST))
+            }
 
     data class MyType(val name: String)
     data class MyParams(val name: String)
 
-    private inner class MyUseCase : UseCase<MyType, MyParams>() {
+    private inner class MyUseCase : UseCase<MyType, MyParams>(coroutinesTestRule.testDispatcher) {
         override suspend fun run(params: MyParams) = Right(MyType(TYPE_TEST))
+        override val callableList = null
     }
 }

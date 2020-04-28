@@ -23,7 +23,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 
 /**
  * Base class for Android tests. Inherit from it to create test cases which contain android
@@ -32,13 +31,13 @@ import org.robolectric.annotation.Config
  * @see UnitTest
  */
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class,
-        application = AndroidTest.ApplicationStub::class,
-        sdk = [21])
 abstract class AndroidTest {
 
     @Suppress("LeakingThis")
     @Rule @JvmField val injectMocks = InjectMocksRule.create(this@AndroidTest)
+
+    @get:Rule
+    var coroutinesTestRule = CoroutineTestRule()
 
     fun context(): Context = RuntimeEnvironment.application
 

@@ -33,7 +33,7 @@ class PlayMovieTest : AndroidTest() {
     @Mock private lateinit var navigator: Navigator
 
     @Before fun setUp() {
-        playMovie = PlayMovie(context, navigator)
+        playMovie = PlayMovie(context, navigator, coroutinesTestRule.testDispatcher)
     }
 
     @Test fun `should play movie trailer`() {

@@ -7,13 +7,6 @@ import javax.inject.Named
 
 @Module
 class UseCaseModule {
-    @Named("UseCaseScope")
-    @Provides
-    fun provideCoroutineScope() =
-            CoroutineScope(
-                    SupervisorJob() + Dispatchers.Main
-            )
-
     @Named("UseCaseDispatcher")
     @Provides
     fun provideCoroutineDispatcher() :

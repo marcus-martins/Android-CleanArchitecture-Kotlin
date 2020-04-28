@@ -27,6 +27,8 @@ import org.mockito.junit.MockitoJUnitRunner
  */
 @RunWith(MockitoJUnitRunner::class)
 abstract class UnitTest {
+    @get:Rule
+    var coroutinesTestRule = CoroutineTestRule()
 
     @Suppress("LeakingThis")
     @Rule @JvmField val injectMocks = InjectMocksRule.create(this@UnitTest)

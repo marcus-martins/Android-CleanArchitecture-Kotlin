@@ -20,7 +20,7 @@ import com.fernandocejas.sample.core.functional.Either.Right
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -34,12 +34,12 @@ class GetMovieDetailsTest : UnitTest() {
     @Mock private lateinit var moviesRepository: MoviesRepository
 
     @Before fun setUp() {
-        getMovieDetails = GetMovieDetails(moviesRepository)
+        getMovieDetails = GetMovieDetails(moviesRepository, coroutinesTestRule.testDispatcher)
         given { moviesRepository.movieDetails(MOVIE_ID) }.willReturn(Right(MovieDetails.empty()))
     }
 
     @Test fun `should get data from repository`() {
-        runBlocking { getMovieDetails.run(GetMovieDetails.Params(MOVIE_ID)) }
+        coroutinesTestRule.testDispatcher.runBlockingTest { getMovieDetails.run(GetMovieDetails.Params(MOVIE_ID)) }
 
         verify(moviesRepository).movieDetails(MOVIE_ID)
         verifyNoMoreInteractions(moviesRepository)

@@ -19,6 +19,7 @@ import com.fernandocejas.sample.UnitTest
 import com.fernandocejas.sample.core.functional.Either.Left
 import com.fernandocejas.sample.core.functional.Either.Right
 import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqualTo
 import org.junit.Test
@@ -34,7 +35,7 @@ class EitherTest : UnitTest() {
         result.fold({},
                 { right ->
                     right shouldBeInstanceOf String::class.java
-                    right shouldEqualTo "ironman"
+                    right shouldBeEqualTo "ironman"
                 })
     }
 
@@ -47,19 +48,20 @@ class EitherTest : UnitTest() {
         result.fold(
                 { left ->
                     left shouldBeInstanceOf String::class.java
-                    left shouldEqualTo "ironman"
-                }, {})
+                    left shouldBeEqualTo "ironman"
+                }, {}
+        )
     }
 
     @Test fun `Either fold should ignore passed argument if it is Right type`() {
         val result = Right("Right").getOrElse("Other")
 
-        result shouldEqualTo "Right"
+        result shouldBeEqualTo "Right"
     }
 
     @Test fun `Either fold should return argument if it is Left type`() {
         val result = Left("Left").getOrElse("Other")
 
-        result shouldEqualTo "Other"
+        result shouldBeEqualTo "Other"
     }
 }
